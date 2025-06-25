@@ -49,29 +49,69 @@ body {
   width: 16px;
   height: 2px;
 }
+#mobile-controls {
+  display: none;
+  position: fixed;
+  bottom: 12px;
+  left: 0;
+  width: 100vw;
+  z-index: 100;
+  pointer-events: none;
+  justify-content: center;
+  align-items: flex-end;
+}
+#mobile-controls > div {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
 .mobile-btn {
   pointer-events: auto;
-  font-size: 2.2em;
-  background: rgba(40,40,40,0.8);
+  font-size: 2em;
+  background: rgba(40,40,40,0.85);
   color: #fff;
   border: 2px solid #fff;
-  border-radius: 16px;
-  padding: 12px 24px;
-  margin: 4px;
-  min-width: 56px;
-  min-height: 56px;
+  border-radius: 14px;
+  padding: 10px 16px;
+  margin: 2px;
+  min-width: 40px;
+  min-height: 40px;
   box-shadow: 0 2px 8px #0008;
   user-select: none;
 }
 @media (max-width: 600px) {
   #hud, #kills, #top-scores {
-    font-size: 16px !important;
-    padding: 4px 8px !important;
+    font-size: 15px !important;
+    padding: 3px 6px !important;
   }
   .mobile-btn {
-    font-size: 1.4em;
-    min-width: 40px;
-    min-height: 40px;
-    padding: 8px 12px;
+    font-size: 1.1em;
+    min-width: 32px;
+    min-height: 32px;
+    padding: 6px 8px;
+    margin: 1px;
   }
+  #mobile-controls > div {
+    width: 100vw;
+    gap: 0;
+  }
+}
+.gameover-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: #f00;
+  font-family: monospace;
+  background: rgba(0,0,0,0.8);
+  padding: 32px 4vw;
+  border-radius: 20px;
+  z-index: 1000;
+  text-align: center;
+  width: 90vw;
+  max-width: 420px;
+  min-width: 220px;
+  box-sizing: border-box;
 } 

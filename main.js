@@ -192,29 +192,24 @@ function setupMobileControls() {
   if (!controls) return;
   controls.style.display = 'block';
   // Pohyb
-  document.getElementById('btn-up').ontouchstart = () => { mobileMove.up = true; };
-  document.getElementById('btn-up').ontouchend = () => { mobileMove.up = false; };
-  document.getElementById('btn-down').ontouchstart = () => { mobileMove.down = true; };
-  document.getElementById('btn-down').ontouchend = () => { mobileMove.down = false; };
-  document.getElementById('btn-left').ontouchstart = () => { mobileMove.left = true; };
-  document.getElementById('btn-left').ontouchend = () => { mobileMove.left = false; };
-  document.getElementById('btn-right').ontouchstart = () => { mobileMove.right = true; };
-  document.getElementById('btn-right').ontouchend = () => { mobileMove.right = false; };
+  document.getElementById('btn-up').ontouchstart = e => { e.stopPropagation(); mobileMove.up = true; };
+  document.getElementById('btn-up').ontouchend = e => { e.stopPropagation(); mobileMove.up = false; };
+  document.getElementById('btn-down').ontouchstart = e => { e.stopPropagation(); mobileMove.down = true; };
+  document.getElementById('btn-down').ontouchend = e => { e.stopPropagation(); mobileMove.down = false; };
+  document.getElementById('btn-left').ontouchstart = e => { e.stopPropagation(); mobileMove.left = true; };
+  document.getElementById('btn-left').ontouchend = e => { e.stopPropagation(); mobileMove.left = false; };
+  document.getElementById('btn-right').ontouchstart = e => { e.stopPropagation(); mobileMove.right = true; };
+  document.getElementById('btn-right').ontouchend = e => { e.stopPropagation(); mobileMove.right = false; };
   // Skok
-  document.getElementById('btn-jump').ontouchstart = () => {
-    if (!isJumping) {
-      yVelocity = jumpStrength;
-      isJumping = true;
-    }
-  };
+  document.getElementById('btn-jump').ontouchstart = e => { e.stopPropagation(); if (!isJumping) { yVelocity = jumpStrength; isJumping = true; } };
   // Střelba
-  document.getElementById('btn-shoot').ontouchstart = () => { mobileShoot = true; };
-  document.getElementById('btn-shoot').ontouchend = () => { mobileShoot = false; };
+  document.getElementById('btn-shoot').ontouchstart = e => { e.stopPropagation(); mobileShoot = true; };
+  document.getElementById('btn-shoot').ontouchend = e => { e.stopPropagation(); mobileShoot = false; };
   // Otáčení
-  document.getElementById('btn-turn-left').ontouchstart = () => { mobileTurn.left = true; };
-  document.getElementById('btn-turn-left').ontouchend = () => { mobileTurn.left = false; };
-  document.getElementById('btn-turn-right').ontouchstart = () => { mobileTurn.right = true; };
-  document.getElementById('btn-turn-right').ontouchend = () => { mobileTurn.right = false; };
+  document.getElementById('btn-turn-left').ontouchstart = e => { e.stopPropagation(); mobileTurn.left = true; };
+  document.getElementById('btn-turn-left').ontouchend = e => { e.stopPropagation(); mobileTurn.left = false; };
+  document.getElementById('btn-turn-right').ontouchstart = e => { e.stopPropagation(); mobileTurn.right = true; };
+  document.getElementById('btn-turn-right').ontouchend = e => { e.stopPropagation(); mobileTurn.right = false; };
   // Ovládání kamery tažením prstu
   let lastTouchX = null;
   controls.ontouchstart = e => {
@@ -306,12 +301,19 @@ function init() {
     obstacleBlocks.push(block);
   }
 
-  // Vytvoř 5 zombie panáčků na různých pozicích
+  // Vytvoř 3 zombie panáčky na různých pozicích, ne u hráče
   enemies = [];
-  for (let i = 0; i < 5; i++) {
-    let x = (Math.random() * 18 - 9).toFixed(1);
-    let z = (Math.random() * 18 - 9).toFixed(1);
-    createZombie(x, z);
+  for (let i = 0; i < 3; i++) {
+    let x, z;
+    let attempts = 0;
+    do {
+      x = (Math.random() * 18 - 9).toFixed(1);
+      z = (Math.random() * 18 - 9).toFixed(1);
+      attempts++;
+    } while ((!isPositionFree(x, z) || Math.sqrt((x-camera.position.x)**2 + (z-camera.position.z)**2) < 4) && attempts < 50);
+    if (isPositionFree(x, z) && Math.sqrt((x-camera.position.x)**2 + (z-camera.position.z)**2) >= 4) {
+      createZombie(x, z);
+    }
   }
 
   window.addEventListener('resize', onWindowResize, false);
@@ -352,6 +354,18 @@ function onKeyDown(event) {
       if (!isJumping) {
         yVelocity = jumpStrength;
         isJumping = true;
+      }
+      break;
+    case 'MetaLeft':
+    case 'MetaRight':
+    case 'ControlLeft':
+    case 'ControlRight':
+      if (canShoot && ammo > 0) {
+        ammo--;
+        updateHUD();
+        canShoot = false;
+        setTimeout(() => { canShoot = true; }, 300);
+        shoot();
       }
       break;
   }
@@ -582,18 +596,7 @@ function showGameOver() {
   console.log('GAME OVER!');
   // Vytvoř menu GAME OVER
   const div = document.createElement('div');
-  div.style.position = 'absolute';
-  div.style.top = '50%';
-  div.style.left = '50%';
-  div.style.transform = 'translate(-50%, -50%)';
-  div.style.fontSize = '48px';
-  div.style.color = '#f00';
-  div.style.fontFamily = 'monospace';
-  div.style.background = 'rgba(0,0,0,0.8)';
-  div.style.padding = '40px 80px';
-  div.style.borderRadius = '20px';
-  div.style.zIndex = '1000';
-  div.style.textAlign = 'center';
+  div.className = 'gameover-modal';
   div.innerHTML = `GAME OVER<br>Zabití nepřátelé: ${killCount}<br><br>`;
   // Input pro jméno
   const input = document.createElement('input');
