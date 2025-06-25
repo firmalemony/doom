@@ -185,6 +185,7 @@ function isMobile() {
 
 let mobileMove = {up: false, down: false, left: false, right: false};
 let mobileShoot = false;
+let mobileShootPrev = false;
 let mobileTurn = {left: false, right: false};
 
 function setupMobileControls() {
@@ -577,13 +578,15 @@ function animate() {
     moveBackward = mobileMove.down;
     moveLeft = mobileMove.left;
     moveRight = mobileMove.right;
-    if (mobileShoot && canShoot && ammo > 0) {
+    // Střelba pouze při přechodu mobileShoot z false na true
+    if (mobileShoot && !mobileShootPrev && canShoot && ammo > 0) {
       ammo--;
       updateHUD();
       canShoot = false;
       setTimeout(() => { canShoot = true; }, 300);
       shoot();
     }
+    mobileShootPrev = mobileShoot;
     // Otáčení kamerou tlačítky
     if (mobileTurn.left) yaw += 0.06;
     if (mobileTurn.right) yaw -= 0.06;
