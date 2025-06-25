@@ -205,7 +205,6 @@ function setupMobileControls() {
   document.getElementById('btn-jump').ontouchstart = e => { e.stopPropagation(); if (!isJumping) { yVelocity = jumpStrength; isJumping = true; } };
   // Střelba
   document.getElementById('btn-shoot').ontouchstart = e => { e.stopPropagation(); mobileShoot = true; };
-  document.getElementById('btn-shoot').ontouchend = e => { e.stopPropagation(); mobileShoot = false; };
   // Otáčení
   document.getElementById('btn-turn-left').ontouchstart = e => { e.stopPropagation(); mobileTurn.left = true; };
   document.getElementById('btn-turn-left').ontouchend = e => { e.stopPropagation(); mobileTurn.left = false; };
@@ -578,15 +577,15 @@ function animate() {
     moveBackward = mobileMove.down;
     moveLeft = mobileMove.left;
     moveRight = mobileMove.right;
-    // Střelba pouze při přechodu mobileShoot z false na true
-    if (mobileShoot && !mobileShootPrev && canShoot && ammo > 0) {
+    // Střelba pouze při touchstart na btn-shoot
+    if (mobileShoot && canShoot && ammo > 0) {
       ammo--;
       updateHUD();
       canShoot = false;
       setTimeout(() => { canShoot = true; }, 300);
       shoot();
+      mobileShoot = false; // ihned po vystřelení nastav zpět na false
     }
-    mobileShootPrev = mobileShoot;
     // Otáčení kamerou tlačítky
     if (mobileTurn.left) yaw += 0.06;
     if (mobileTurn.right) yaw -= 0.06;
