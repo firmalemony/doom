@@ -179,6 +179,57 @@ function createZombie(x, z) {
   return group;
 }
 
+function isMobile() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
+let mobileMove = {up: false, down: false, left: false, right: false};
+let mobileShoot = false;
+let mobileTurn = {left: false, right: false};
+
+function setupMobileControls() {
+  const controls = document.getElementById('mobile-controls');
+  if (!controls) return;
+  controls.style.display = 'block';
+  // Pohyb
+  document.getElementById('btn-up').ontouchstart = () => { mobileMove.up = true; };
+  document.getElementById('btn-up').ontouchend = () => { mobileMove.up = false; };
+  document.getElementById('btn-down').ontouchstart = () => { mobileMove.down = true; };
+  document.getElementById('btn-down').ontouchend = () => { mobileMove.down = false; };
+  document.getElementById('btn-left').ontouchstart = () => { mobileMove.left = true; };
+  document.getElementById('btn-left').ontouchend = () => { mobileMove.left = false; };
+  document.getElementById('btn-right').ontouchstart = () => { mobileMove.right = true; };
+  document.getElementById('btn-right').ontouchend = () => { mobileMove.right = false; };
+  // Skok
+  document.getElementById('btn-jump').ontouchstart = () => {
+    if (!isJumping) {
+      yVelocity = jumpStrength;
+      isJumping = true;
+    }
+  };
+  // Střelba
+  document.getElementById('btn-shoot').ontouchstart = () => { mobileShoot = true; };
+  document.getElementById('btn-shoot').ontouchend = () => { mobileShoot = false; };
+  // Otáčení
+  document.getElementById('btn-turn-left').ontouchstart = () => { mobileTurn.left = true; };
+  document.getElementById('btn-turn-left').ontouchend = () => { mobileTurn.left = false; };
+  document.getElementById('btn-turn-right').ontouchstart = () => { mobileTurn.right = true; };
+  document.getElementById('btn-turn-right').ontouchend = () => { mobileTurn.right = false; };
+  // Ovládání kamery tažením prstu
+  let lastTouchX = null;
+  controls.ontouchstart = e => {
+    if (e.touches.length === 1) lastTouchX = e.touches[0].clientX;
+  };
+  controls.ontouchmove = e => {
+    if (e.touches.length === 1 && lastTouchX !== null) {
+      const dx = e.touches[0].clientX - lastTouchX;
+      yaw -= dx * 0.008;
+      lastTouchX = e.touches[0].clientX;
+    }
+  };
+  controls.ontouchend = e => { lastTouchX = null; };
+}
+
 function init() {
   scene = new THREE.Scene();
   scene.background = null;
@@ -272,6 +323,7 @@ function init() {
   updateKills();
   updateTopScores();
   initPointerLock();
+  if (isMobile()) setupMobileControls();
   animate();
 }
 
@@ -503,6 +555,24 @@ function animate() {
       showGameOver();
       break;
     }
+  }
+
+  // Mobilní pohyb
+  if (isMobile()) {
+    moveForward = mobileMove.up;
+    moveBackward = mobileMove.down;
+    moveLeft = mobileMove.left;
+    moveRight = mobileMove.right;
+    if (mobileShoot && canShoot && ammo > 0) {
+      ammo--;
+      updateHUD();
+      canShoot = false;
+      setTimeout(() => { canShoot = true; }, 300);
+      shoot();
+    }
+    // Otáčení kamerou tlačítky
+    if (mobileTurn.left) yaw += 0.06;
+    if (mobileTurn.right) yaw -= 0.06;
   }
 
   renderer.render(scene, camera);

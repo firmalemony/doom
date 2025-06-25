@@ -48,4 +48,30 @@ body {
   top: 7px;
   width: 16px;
   height: 2px;
+}
+.mobile-btn {
+  pointer-events: auto;
+  font-size: 2.2em;
+  background: rgba(40,40,40,0.8);
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 16px;
+  padding: 12px 24px;
+  margin: 4px;
+  min-width: 56px;
+  min-height: 56px;
+  box-shadow: 0 2px 8px #0008;
+  user-select: none;
+}
+@media (max-width: 600px) {
+  #hud, #kills, #top-scores {
+    font-size: 16px !important;
+    padding: 4px 8px !important;
+  }
+  .mobile-btn {
+    font-size: 1.4em;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px 12px;
+  }
 } 
