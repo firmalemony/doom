@@ -66,19 +66,22 @@ body {
   justify-content: center;
   align-items: flex-end;
 }
+.mobile-btn, #mobile-controls {
+  user-select: none;
+  -webkit-user-select: none;
+}
 .mobile-btn {
+  margin: 0;
+  border-radius: 0;
   pointer-events: auto;
   font-size: 2em;
   background: rgba(40,40,40,0.85);
   color: #fff;
   border: 2px solid #fff;
-  border-radius: 14px;
   padding: 10px 16px;
-  margin: 2px;
   min-width: 40px;
   min-height: 40px;
   box-shadow: 0 2px 8px #0008;
-  user-select: none;
 }
 @media (max-width: 600px) {
   #hud, #kills, #top-scores {
@@ -90,12 +93,22 @@ body {
     min-width: 32px;
     min-height: 32px;
     padding: 6px 8px;
-    margin: 1px;
   }
   #mobile-controls > div {
     width: 100vw;
     gap: 0;
   }
+}
+#mobile-controls .btn-row {
+  display: flex;
+  gap: 0;
+}
+#mobile-controls {
+  pointer-events: auto;
+  background: transparent;
+}
+#mobile-controls > * {
+  pointer-events: none;
 }
 .gameover-modal {
   position: absolute;

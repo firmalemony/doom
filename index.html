@@ -28,17 +28,19 @@
     <div style="display:flex;justify-content:space-between;width:100vw;">
       <div style="width:40vw;display:flex;flex-direction:column;align-items:center;">
         <div style="height:40px;"></div>
-        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:6px;">
-          <button id="btn-turn-left" class="mobile-btn">⟲</button>
-          <button id="btn-turn-right" class="mobile-btn">⟳</button>
+        <div class="btn-row" style="flex-direction:column;align-items:center;">
+          <div class="btn-row" style="justify-content:center;margin-bottom:6px;">
+            <button id="btn-turn-left" class="mobile-btn">⟲</button>
+            <button id="btn-turn-right" class="mobile-btn">⟳</button>
+          </div>
+          <button id="btn-up" class="mobile-btn">▲</button>
+          <div class="btn-row" style="justify-content:center;">
+            <button id="btn-left" class="mobile-btn">◀</button>
+            <button id="btn-down" class="mobile-btn">▼</button>
+            <button id="btn-right" class="mobile-btn">▶</button>
+          </div>
+          <button id="btn-jump" class="mobile-btn" style="margin-top:10px;">⤒</button>
         </div>
-        <button id="btn-up" class="mobile-btn">▲</button>
-        <div style="display:flex;gap:10px;">
-          <button id="btn-left" class="mobile-btn">◀</button>
-          <button id="btn-down" class="mobile-btn">▼</button>
-          <button id="btn-right" class="mobile-btn">▶</button>
-        </div>
-        <button id="btn-jump" class="mobile-btn" style="margin-top:10px;">⤒</button>
       </div>
       <div style="width:40vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">
         <button id="btn-shoot" class="mobile-btn" style="margin-bottom:40px;">Střelba</button>
