@@ -204,7 +204,7 @@ function setupMobileControls() {
   // Skok
   document.getElementById('btn-jump').ontouchstart = e => { e.stopPropagation(); if (!isJumping) { yVelocity = jumpStrength; isJumping = true; } };
   // Střelba
-  document.getElementById('btn-shoot').ontouchstart = e => { e.stopPropagation(); mobileShoot = true; };
+  document.getElementById('btn-shoot').ontouchstart = e => { e.preventDefault(); e.stopPropagation(); mobileShoot = true; };
   // Otáčení
   document.getElementById('btn-turn-left').ontouchstart = e => { e.stopPropagation(); mobileTurn.left = true; };
   document.getElementById('btn-turn-left').ontouchend = e => { e.stopPropagation(); mobileTurn.left = false; };
